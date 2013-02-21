@@ -7,8 +7,15 @@
 
 static unsigned long ServerCount( const int delta )
 {
-  static unsigned long server_count = 0;
-  server_count += delta;
+  static unsigned long server_count = 0UL;
+  if( delta < -1 || delta > 1 )
+  {
+    server_count = 0UL;
+  }
+  else
+  {
+    server_count += delta;
+  }
   return server_count;
 }
 
@@ -114,7 +121,7 @@ public:
 };
 
 template <typename CF> 
-HRESULT ComboxGetClassObject( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
+static HRESULT ComboxGetClassObject( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
 {
   if( IsEqualGUID( rclsid, clsid ) )
   {
@@ -125,7 +132,7 @@ HRESULT ComboxGetClassObject( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVO
 }
 
 template <typename CF>
-HRESULT ComboxCreateInstance( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
+static HRESULT ComboxCreateInstance( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
 {
   IClassFactory *icf = NULL;
   HRESULT r;
