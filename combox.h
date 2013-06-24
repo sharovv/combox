@@ -216,14 +216,28 @@ static HRESULT Combox_QueryInterfacev( IUnknown *pi, REFIID riid, void **ppi, ..
   return r;
 }
 
-
 static STDMETHODIMP ComboxUnknown_QueryInterface( IUnknown *pi, REFIID riid, void **ppi )
 {
-  return Combox_QueryInterfacev( pi, riid, ppi,
-    combox.interface_id[0], pi,
-    combox.num_interfaces > 1 ? combox.interface_id[1]: NULL, combox.num_interfaces > 1 ? pi: NULL,
-    combox.num_interfaces > 2 ? combox.interface_id[2]: NULL, combox.num_interfaces > 2 ? pi: NULL,
-    combox.num_interfaces > 3 ? combox.interface_id[3]: NULL, combox.num_interfaces > 3 ? pi: NULL, NULL );
+  int i;
+  ComboxUnknown_t *u;
+
+  if( IsEqualGUID( riid, &IID_IUnknown ) )
+  {
+    pi->lpVtbl->AddRef( pi );
+    *ppi = pi;
+    return S_OK;
+  }
+  for( i = 0; i < combox.num_interfaces; i++ )
+  {
+    if( IsEqualGUID( riid, combox.interface_id[i] ) )
+    {
+      pi->lpVtbl->AddRef( pi );
+      u = combox_instance( pi );
+      *ppi = u + i;
+      return S_OK;
+    }
+  }
+  return E_NOINTERFACE;
 }
 
 static STDMETHODIMP_( unsigned long ) ComboxUnknown_AddRef( IUnknown *pi )

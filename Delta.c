@@ -51,8 +51,8 @@ static STDMETHODIMP CharlieTest( ICharlie *pi, const int a )
 static STDMETHODIMP QueryInterface( Delta *p, REFIID riid, void **ppi )
 {
   return Combox_QueryInterfacev( (IUnknown *)p, riid, ppi,
-    &IID_IBravo, p,
-    &IID_ICharlie, p,
+    &IID_IBravo, (ComboxUnknown_t *)p,
+    &IID_ICharlie, (ComboxUnknown_t *)p + 1,
     &IID_IAlpha, p->alpha, NULL );
 }
 

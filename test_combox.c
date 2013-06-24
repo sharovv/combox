@@ -29,6 +29,13 @@ main()
     return printf( "%s(%d) QueryInterface failed\n", __FILE__, __LINE__ );
 
   charlie->lpVtbl->CharlieTest( charlie, 88 );
+
+  if( bravo->lpVtbl->QueryInterface( bravo, &IID_IAlpha, (void **)&alpha ) != S_OK )
+    return printf( "%s(%d) QueryInterface failed\n", __FILE__, __LINE__ );
+  
+  alpha->lpVtbl->AlphaSet( alpha, 166 );
+
+  alpha->lpVtbl->Release( alpha );
   bravo->lpVtbl->Release( bravo );
   charlie->lpVtbl->Release( charlie );
 
