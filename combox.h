@@ -26,17 +26,17 @@ template <typename TC> struct ComboxUnknown
   unsigned long RefCount;
   ComboxUnknown() { RefCount = 1; }
   STDMETHOD( QueryInterface )( REFIID riid, void **ppi, REFIID iid, void *iface ) 
-  { 
-    if( IsEqualGUID( riid, IID_IUnknown ) || IsEqualGUID( riid, iid ) ) 
+  {
+    if( IsEqualGUID( riid, IID_IUnknown ) || IsEqualGUID( riid, iid ) )
     {
       *ppi = iface;
       AddRef();
-      return S_OK; 
+      return S_OK;
     }
     return E_NOINTERFACE;
   }
-  STDMETHOD( QueryInterfacev )( REFIID riid, void **ppi, ... ) 
-  { 
+  STDMETHOD( QueryInterfacev )( REFIID riid, void **ppi, ... )
+  {
     IUnknown *iface;
     va_list args;
     const GUID *iid;
@@ -146,6 +146,8 @@ static HRESULT ComboxCreateInstance( REFCLSID clsid, REFCLSID rclsid, REFIID rii
 
 #else /* pure C implementation */
 
+#include <string.h>
+
 #define COMBOX_MAX_INTERFACE 4
 #define COMBOX_FIRST_INTERFACE 0x80000000UL
 
@@ -235,6 +237,18 @@ static STDMETHODIMP ComboxUnknown_QueryInterface( IUnknown *pi, REFIID riid, voi
       u = combox_instance( pi );
       *ppi = u + i;
       return S_OK;
+    }
+  }
+  /* Stub to supress "define but not used" warning */
+  {
+    IUnknown *iunk;
+    static const GUID iff =
+    {
+      0xFFFFFFFF, 0xFFFF, 0xFFFF, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }
+    };
+    if( Combox_QueryInterfacev( pi, &iff, (void **)&iunk, NULL ) == S_OK )
+    {
+      iunk->lpVtbl->Release( iunk );
     }
   }
   return E_NOINTERFACE;
@@ -327,14 +341,14 @@ static STDMETHODIMP ComboxClassFactory_CreateInstance( IClassFactory *pi, IUnkno
 
     if( pu->lpVtbl->QueryInterface == 0 )
       pu->lpVtbl->QueryInterface = ComboxUnknown_QueryInterface;
-    
+
     if( pu->lpVtbl->AddRef == 0 )
       pu->lpVtbl->AddRef = ComboxUnknown_AddRef;
-    
+
     if( pu->lpVtbl->Release == 0 )
       pu->lpVtbl->Release = ComboxUnknown_Release;
   }
-  
+
   if( (r = pn->lpVtbl->QueryInterface( pn, riid, ppi )) != S_OK )
   {
     free( pn );
@@ -361,7 +375,7 @@ static STDMETHODIMP ComboxClassFactory_LockServer( IClassFactory *pi, int flock 
   return S_OK;
 }
 
-static IClassFactoryVtbl ComboxClassFactoryVtbl = 
+static IClassFactoryVtbl ComboxClassFactoryVtbl =
 {
   ComboxClassFactory_QueryInterface,
   ComboxClassFactory_AddRef,
@@ -401,6 +415,6 @@ static HRESULT STDMETHODCALLTYPE ComboxCreateInstance( REFCLSID rclsid, REFIID r
   return r;
 }
 
-#endif 
+#endif
 
 #endif

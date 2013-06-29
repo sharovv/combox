@@ -7,6 +7,10 @@
 
 #endif
 
+#ifndef BOOL
+#define BOOL int
+#endif
+
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -132,7 +136,7 @@ typedef struct  _GUID
   unsigned short Data2;
   unsigned short Data3;
   unsigned char Data4[ 8 ];
-}	GUID;
+} GUID;
 
 #endif /* !GUID_DEFINED */
 #if !defined( __LPGUID_DEFINED__ )
@@ -241,6 +245,39 @@ static const GUID IID_IClassFactory =
 { 0x00000001, 0x0000, 0xC000, { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46 } };
 
 #if defined(__cplusplus)
+
+static inline bool IsEqualGUID( const GUID *a, const GUID *b )
+{
+  return
+    ((a->Data1 == b->Data1) &&
+    (a->Data2 == b->Data2) &&
+    (a->Data3 == b->Data3) &&
+    (a->Data4[0] == b->Data4[0]) &&
+    (a->Data4[1] == b->Data4[1]) &&
+    (a->Data4[2] == b->Data4[2]) &&
+    (a->Data4[3] == b->Data4[3]) &&
+    (a->Data4[4] == b->Data4[4]) &&
+    (a->Data4[5] == b->Data4[5]) &&
+    (a->Data4[6] == b->Data4[6]) &&
+    (a->Data4[7] == b->Data4[7]));
+}
+
+static inline bool IsEqualGUID( const GUID &a, const GUID &b )
+{
+  return
+    ((a.Data1 == b.Data1) &&
+    (a.Data2 == b.Data2) &&
+    (a.Data3 == b.Data3) &&
+    (a.Data4[0] == b.Data4[0]) &&
+    (a.Data4[1] == b.Data4[1]) &&
+    (a.Data4[2] == b.Data4[2]) &&
+    (a.Data4[3] == b.Data4[3]) &&
+    (a.Data4[4] == b.Data4[4]) &&
+    (a.Data4[5] == b.Data4[5]) &&
+    (a.Data4[6] == b.Data4[6]) &&
+    (a.Data4[7] == b.Data4[7]));
+}
+/*
 #define IsEqualGUID( a, b ) (((a)->Data1 == (b)->Data1) && \
                              ((a)->Data2 == (b)->Data2) && \
                              ((a)->Data3 == (b)->Data3) && \
@@ -252,6 +289,7 @@ static const GUID IID_IClassFactory =
                              ((a)->Data4[5] == (b)->Data4[5]) && \
                              ((a)->Data4[6] == (b)->Data4[6]) && \
                              ((a)->Data4[7] == (b)->Data4[7]))
+*/
 #else
 #define IsEqualGUID( a, b ) \
        (((unsigned long *) a)[0] == ((unsigned long *) b)[0] && \

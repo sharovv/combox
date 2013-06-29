@@ -23,6 +23,7 @@ static void cleanup( IUnknown *pi )
 {
   Alpha *p = (Alpha *)pi;
 
+  p->Internal = 0;
   printf( "%s(%d): Alpha::cleanup\n", __FILE__, __LINE__ );
 }
 

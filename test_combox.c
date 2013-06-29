@@ -5,7 +5,7 @@
 #include <Echo.h>
 #include <Foxtrot.h>
 
-main()
+int main()
 {
   IAlpha *alpha;
   IBravo *bravo;
