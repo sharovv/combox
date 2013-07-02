@@ -6,7 +6,7 @@
 
 typedef struct _Delta
 {
-  COMBOX_VTBL( IBravo );
+  COMBOX_VTBL;
 
   IAlpha *alpha;
   int Internal;

@@ -170,7 +170,7 @@ typedef struct _ComboxUnknown_t
   unsigned long RefCount;
 } ComboxUnknown_t;
 
-#define COMBOX_VTBL( iface ) iface##Vtbl *lpVtbl; unsigned long RefCount; ComboxUnknown_t ComboxInterface[ COMBOX_MAX_INTERFACE - 1 ]
+#define COMBOX_VTBL ComboxUnknown_t ComboxInterface[ COMBOX_MAX_INTERFACE ]
 
 typedef struct _ComboxClassFactory_t
 {

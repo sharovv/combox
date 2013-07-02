@@ -5,7 +5,7 @@
 
 typedef struct _Alpha
 {
-  COMBOX_VTBL( IAlpha );
+  COMBOX_VTBL;
 
   int Internal;
 } Alpha;
