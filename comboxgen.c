@@ -20,6 +20,8 @@ void print_interface( const char *name_interface )
   GUID id;
 
   create_guid( &id );
+  printf( "#ifndef _%s_h\n", name_interface );
+  printf( "#define _%s_h\n\n", name_interface );
   printf( "#include <objbase.h>\n\n" );
   printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
@@ -36,7 +38,8 @@ void print_interface( const char *name_interface )
   printf( "  STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;\n" );
   printf( "  STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;\n" );
   printf( "  STDMETHOD_( unsigned long, Release )( THIS ) PURE;\n\n" );
-  printf( "  STDMETHOD( Method1 )( THIS_ const int ) PURE;\n};\n" );
+  printf( "  STDMETHOD( Method1 )( THIS_ const int ) PURE;\n};\n\n" );
+  printf( "#endif\n" );
 }
 
 void print_header( const char *name_class, const char *name_interface )
@@ -44,6 +47,8 @@ void print_header( const char *name_class, const char *name_interface )
   GUID id;
 
   create_guid( &id );
+  printf( "#ifndef _%s_h\n", name_class );
+  printf( "#define _%s_h\n\n", name_class );
   printf( "#include <%s.h>\n\n", name_interface );
   printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
@@ -56,7 +61,8 @@ void print_header( const char *name_class, const char *name_interface )
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
-  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n", name_class );
+  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n\n", name_class );
+  printf( "#endif\n" );
 }
 
 void print_c_class( const char *name_class, const char *name_interface )
