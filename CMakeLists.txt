@@ -4,9 +4,12 @@ project( combox )
 include_directories( ${CMAKE_SOURCE_DIR} )
 if( NOT WIN32 )
 include_directories( ${CMAKE_SOURCE_DIR}/objbase )
-endif( NOT WIN32 )
+endif()
 
 add_executable( comboxgen comboxgen.c )
+if( NOT WIN32 )
+target_link_libraries( comboxgen uuid )
+endif()
 
 add_library( alpha Alpha.c Delta.c Echo.cpp Foxtrot.cpp )
 

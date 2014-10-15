@@ -25,12 +25,12 @@ void print_interface( const char *name_interface )
   printf( "#include <objbase.h>\n\n" );
   printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
-    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3], 
+    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "static const GUID IID_%s = { 0x%08lX, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
     name_interface,
     id.Data1, id.Data2, id.Data3,
-    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3], 
+    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "#undef INTERFACE\n" );
   printf( "#define INTERFACE %s\n\n", name_interface );
@@ -52,16 +52,17 @@ void print_header( const char *name_class, const char *name_interface )
   printf( "#include <%s.h>\n\n", name_interface );
   printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
-    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3], 
+    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "static const GUID CLSID_%s = { 0x%08lX, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
     name_class,
     id.Data1, id.Data2, id.Data3,
-    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3], 
+    id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
-  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n\n", name_class );
+  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n", name_class );
+  printf( "STDAPI_( %s * ) new_%s( void );\n\n", name_interface, name_class );
   printf( "#endif\n" );
 }
 
@@ -102,6 +103,7 @@ void print_c_class( const char *name_class, const char *name_interface )
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }\n", name_class );
   printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
+  printf( "STDAPI_( %s * ) new_%s( void ) { %s *pi = (%s *)0; return (ComboxCreateInstance( &CLSID_%s, &IID_%s, (LPVOID *)&pi ) == S_OK) ? pi: (%s *)0; }\n", name_interface, name_class, name_interface, name_interface, name_class, name_interface, name_interface );
 }
 
 void print_cpp_class( const char *name_class, const char *name_interface )
@@ -143,6 +145,7 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
   printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
+  printf( "STDAPI_( %s * ) new_%s( void ) { %s *pi = (%s *)0; return (ComboxCreateInstance<%s>( CLSID_%s, CLSID_%s, IID_%s, (LPVOID *)&pi ) == S_OK) ? pi: (%s *)0; }\n", name_interface, name_class, name_interface, name_interface, name_class, name_class, name_class, name_interface, name_interface );
 }
 
 int main( int argc, char *argv[] )
