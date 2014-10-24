@@ -28,25 +28,25 @@ public:
 
 Foxtrot::Foxtrot()
 {
-  printf( "%s(%d): Foxtrot::Foxtrot\n", __FILE__, __LINE__ );
+  printf( "%s(%d): %s\n", __FILE__, __LINE__, __FUNCTION__ );
   Internal = 55;
 }
 
 Foxtrot::~Foxtrot()
 {
-  printf( "%s(%d): Foxtrot::~Foxtrot\n", __FILE__, __LINE__ );
+  printf( "%s(%d): %s\n", __FILE__, __LINE__, __FUNCTION__ );
 }
 
 STDMETHODIMP Foxtrot::EchoSync( const int a )
 {
-  printf( "%s(%d): Foxtrot::EchoSync( %d )\n", __FILE__, __LINE__, a );
+  printf( "%s(%d): %s( %d )\n", __FILE__, __LINE__, __FUNCTION__, a );
   Internal = a;
   return S_OK;
 }
 
 STDMETHODIMP Foxtrot::FoxtrotSum( const int a, const int b )
 {
-  printf( "%s(%d): Foxtrot::FoxtrotSum( %d, %d )\n", __FILE__, __LINE__, a, b );
+  printf( "%s(%d): %s( %d, %d )\n", __FILE__, __LINE__, __FUNCTION__, a, b );
   Internal = a + b;
   return S_OK;
 }

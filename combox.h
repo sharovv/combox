@@ -144,6 +144,13 @@ static HRESULT ComboxCreateInstance( REFCLSID clsid, REFCLSID rclsid, REFIID rii
   return r;
 }
 
+template <typename CF>
+static void *ComboxInstance( REFCLSID rclsid, REFIID riid )
+{
+  void *pv;
+  return ComboxCreateInstance<CF>( rclsid, rclsid, riid, (LPVOID *)&pv ) == S_OK ? pv: (void *)0;
+}
+
 #else /* pure C implementation */
 
 #include <string.h>
@@ -413,6 +420,12 @@ static HRESULT STDMETHODCALLTYPE ComboxCreateInstance( REFCLSID rclsid, REFIID r
   *ppi = pv;
 
   return r;
+}
+
+static void *ComboxInstance( void )
+{
+  void *pv = (void *)0; 
+  return (ComboxCreateInstance( combox.class_id, combox.interface_id[0], (LPVOID *)&pv ) == S_OK) ? pv: (void *)0;
 }
 
 #endif

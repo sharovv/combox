@@ -13,11 +13,8 @@ int main()
   IEcho *echo;
   IFoxtrot *foxtrot;
 
-  if( Alpha_CreateInstance( &CLSID_Alpha, &IID_IAlpha, (void **)&alpha ) != S_OK )
-    return printf( "%s(%d) Alpha_CreateInstance failed\n", __FILE__, __LINE__ );
-
+  alpha = Alpha();
   alpha->lpVtbl->AlphaSet( alpha, 66 );
-
   alpha->lpVtbl->Release( alpha );
 
   if( Delta_CreateInstance( &CLSID_Delta, &IID_IBravo, (void **)&bravo ) != S_OK )

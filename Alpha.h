@@ -5,3 +5,4 @@ static const GUID CLSID_Alpha = { 0xa837ca31, 0x8ade, 0x48c4, { 0xa5, 0x43, 0xfa
 
 STDAPI Alpha_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Alpha_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
+STDAPI_( IAlpha * ) Alpha( void );

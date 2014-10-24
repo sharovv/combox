@@ -17,7 +17,7 @@ static HRESULT init( IUnknown *pi )
   Delta *p = (Delta *)pi;
 
   Alpha_CreateInstance( &CLSID_Alpha, &IID_IAlpha, (void **)&p->alpha );
-  printf( "%s(%d): Delta::init 0x%08lX\n", __FILE__, __LINE__, (unsigned long)p );
+  printf( "%s(%d): %s 0x%08lX\n", __FILE__, __LINE__, __FUNCTION__, (unsigned long)p );
   p->Internal = 55;
   return S_OK;
 }
@@ -27,14 +27,14 @@ static void cleanup( IUnknown *pi )
   Delta *p = (Delta *)pi;
 
   p->alpha->lpVtbl->Release( p->alpha );
-  printf( "%s(%d): Delta::cleanup\n", __FILE__, __LINE__ );
+  printf( "%s(%d): %s\n", __FILE__, __LINE__, __FUNCTION__ );
 }
 
 static STDMETHODIMP BravoPush( IBravo *pi, const int a )
 {
   Delta *p = (Delta *)pi;
 
-  printf( "%s(%d): Delta::BravoPush( 0x%08lX, %d )\n", __FILE__, __LINE__, (unsigned long)p, a );
+  printf( "%s(%d): %s( 0x%08lX, %d )\n", __FILE__, __LINE__, __FUNCTION__, (unsigned long)p, a );
   p->Internal = a;
   return S_OK;
 }
@@ -43,7 +43,7 @@ static STDMETHODIMP CharlieTest( ICharlie *pi, const int a )
 {
   Delta *p = combox_instance( pi );
 
-  printf( "%s(%d): Delta::CharlieTest( 0x%08lX, %d )\n", __FILE__, __LINE__, (unsigned long)p, a );
+  printf( "%s(%d): %s( 0x%08lX, %d )\n", __FILE__, __LINE__, __FUNCTION__, (unsigned long)p, a );
   p->Internal = a;
   return S_OK;
 }  

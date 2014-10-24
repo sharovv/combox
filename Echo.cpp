@@ -21,18 +21,18 @@ public:
 
 Echo::Echo()
 {
-  printf( "%s(%d): Echo::Echo\n", __FILE__, __LINE__ );
+  printf( "%s(%d): %s\n", __FILE__, __LINE__, __FUNCTION__ );
   Internal = 55;
 }
 
 Echo::~Echo()
 {
-  printf( "%s(%d): Echo::~Echo\n", __FILE__, __LINE__ );
+  printf( "%s(%d): %s\n", __FILE__, __LINE__, __FUNCTION__ );
 }
 
 STDMETHODIMP Echo::EchoSync( const int a )
 {
-  printf( "%s(%d): Echo::EchoSync( %d )\n", __FILE__, __LINE__, a );
+  printf( "%s(%d): %s( %d )\n", __FILE__, __LINE__, __FUNCTION__, a );
   Internal = a;
   return S_OK;
 }
