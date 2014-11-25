@@ -62,7 +62,7 @@ void print_header( const char *name_class, const char *name_interface )
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n", name_class );
-  printf( "STDAPI_( %s * ) %s( void );\n\n", name_interface, name_class );
+  printf( "STDAPI_( %s * ) %s_new( void );\n\n", name_interface, name_class );
   printf( "#endif\n" );
 }
 
@@ -71,39 +71,39 @@ void print_c_class( const char *name_class, const char *name_interface )
   printf( "#include <%s.h>\n", name_class );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
-  printf( "typedef struct _%s_t\n", name_class );
+  printf( "typedef struct _%s\n", name_class );
   printf( "{\n" );
   printf( "  COMBOX_VTBL;\n" );
   printf( "  int Internal;\n" );
-  printf( "} %s_t;\n", name_class );
+  printf( "} %s;\n", name_class );
   printf( "\n" );
   printf( "static HRESULT init( IUnknown *pi )\n" );
   printf( "{\n" );
-  printf( "  %s_t *p = (%s_t *)pi;\n", name_class, name_class );
+  printf( "  %s *p = (%s *)pi;\n", name_class, name_class );
   printf( "  p->Internal = 0;\n" );
   printf( "  return S_OK;\n" );
   printf( "}\n" );
   printf( "\n" );
   printf( "static void cleanup( IUnknown *pi )\n" );
   printf( "{\n" );
-  printf( "  %s_t *p = (%s_t *)pi;\n", name_class, name_class );
+  printf( "  %s *p = (%s *)pi;\n", name_class, name_class );
   printf( "  p->Internal = 0;\n" );
   printf( "}\n" );
   printf( "\n" );
   printf( "static STDMETHODIMP Method1( %s *pi, const int a )\n", name_interface );
   printf( "{\n" );
-  printf( "  %s_t *p = combox_instance( pi );\n", name_class );
+  printf( "  %s *p = combox_instance( pi );\n", name_class );
   printf( "  p->Internal = a;\n" );
   printf( "  return S_OK;\n" );
   printf( "}\n" );
   printf( "\n" );
   printf( "static %sVtbl Vtbl = { 0, 0, 0, Method1 };\n", name_interface );
-  printf( "static combox_t combox = { &CLSID_%s, 1, { &IID_%s }, { &Vtbl }, sizeof( %s_t ), init, cleanup };\n", name_class, name_interface, name_class );
+  printf( "static combox_t combox = { &CLSID_%s, 1, { &IID_%s }, { &Vtbl }, sizeof( %s ), init, cleanup };\n", name_class, name_interface, name_class );
   printf( "\n" );
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }\n", name_class );
   printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
-  printf( "STDAPI_( %s * ) %s( void ) { return (%s *)ComboxInstance(); }\n", name_interface, name_class, name_interface );
+  printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance(); }\n", name_interface, name_class, name_interface );
 }
 
 void print_cpp_class( const char *name_class, const char *name_interface )
@@ -111,14 +111,14 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "#include <%s.h>\n", name_class );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
-  printf( "class %s_t: public %s\n", name_class, name_interface );
+  printf( "class %s: public %s\n", name_class, name_interface );
   printf( "{\n" );
   printf( "private:\n" );
-  printf( "  ComboxUnknown <%s_t> Unk;\n", name_class );
+  printf( "  ComboxUnknown <%s> Unk;\n", name_class );
   printf( "  int Internal;\n" );
   printf( "public:\n" );
-  printf( "  %s_t();\n", name_class );
-  printf( "  ~%s_t();\n", name_class );
+  printf( "  %s();\n", name_class );
+  printf( "  ~%s();\n", name_class );
   printf( "\n" );
   printf( "  STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) { return Unk.QueryInterface( riid, ppi, IID_%s, static_cast<%s *>(this) ); }\n", name_interface, name_interface );
   printf( "  STDMETHOD_( unsigned long, AddRef )() { return Unk.AddRef(); }\n" );
@@ -127,25 +127,25 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "  STDMETHOD( Method1 )( const int a );\n" );
   printf( "};\n" );
   printf( "\n" );
-  printf( "%s_t::%s_t()\n", name_class, name_class );
+  printf( "%s::%s()\n", name_class, name_class );
   printf( "{\n" );
   printf( "  Internal = 55;\n" );
   printf( "}\n" );
   printf( "\n" );
-  printf( "%s_t::~%s_t()\n", name_class, name_class );
+  printf( "%s::~%s()\n", name_class, name_class );
   printf( "{\n" );
   printf( "}\n" );
   printf( "\n" );
-  printf( "STDMETHODIMP %s_t::Method1( const int a )\n", name_class );
+  printf( "STDMETHODIMP %s::Method1( const int a )\n", name_class );
   printf( "{\n" );
   printf( "  Internal = a;\n" );
   printf( "  return S_OK;\n" );
   printf( "}\n" );
   printf( "\n" );
-  printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<%s_t>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
-  printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<%s_t>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
+  printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
+  printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
   printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
-  printf( "STDAPI_( %s * ) %s( void ) { return (%s *)ComboxInstance<%s_t>( CLSID_%s, IID_%s); }\n", name_interface, name_class, name_interface, name_class, name_class, name_interface );
+  printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance<%s>( CLSID_%s, IID_%s); }\n", name_interface, name_class, name_interface, name_class, name_class, name_interface );
 }
 
 int main( int argc, char *argv[] )
