@@ -2,6 +2,8 @@
 
 #include <Delta.h>
 #include <Alpha.h>
+
+#define COMBOX_CLASS Delta
 #include <combox.h>
 
 typedef struct _Delta
@@ -16,7 +18,7 @@ static HRESULT init( IUnknown *pi )
 {
   Delta *p = (Delta *)pi;
 
-  Alpha_CreateInstance( &CLSID_Alpha, &IID_IAlpha, (void **)&p->alpha );
+  p->alpha = Alpha_new();
   printf( "%s(%d): %s 0x%08lX\n", __FILE__, __LINE__, __FUNCTION__, (unsigned long)p );
   p->Internal = 55;
   return S_OK;
@@ -46,7 +48,7 @@ static STDMETHODIMP CharlieTest( ICharlie *pi, const int a )
   printf( "%s(%d): %s( 0x%08lX, %d )\n", __FILE__, __LINE__, __FUNCTION__, (unsigned long)p, a );
   p->Internal = a;
   return S_OK;
-}  
+}
 
 static STDMETHODIMP QueryInterface( Delta *p, REFIID riid, void **ppi )
 {
@@ -69,6 +71,4 @@ static STDMETHODIMP Charlie_QueryInterface( ICharlie *pi, REFIID riid, void **pp
 static IBravoVtbl BravoVtbl = { Bravo_QueryInterface, 0, 0, BravoPush };
 static ICharlieVtbl CharlieVtbl = { Charlie_QueryInterface, 0, 0, CharlieTest };
 static combox_t combox = { &CLSID_Delta, 2, { &IID_IBravo, &IID_ICharlie }, { &BravoVtbl, &CharlieVtbl }, sizeof( Delta ), init, cleanup };
-
-STDAPI Delta_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }
-STDAPI Delta_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }
+STDAPI_( IBravo * ) Delta_new( void ) { return (IBravo *)ComboxInstance(); }

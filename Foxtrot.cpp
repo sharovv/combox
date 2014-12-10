@@ -2,6 +2,8 @@
 
 #include <Foxtrot.h>
 #include <IEcho.h>
+
+#define COMBOX_CLASS Foxtrot
 #include <combox.h>
 
 class Foxtrot: public IFoxtrot, IEcho
@@ -51,5 +53,4 @@ STDMETHODIMP Foxtrot::FoxtrotSum( const int a, const int b )
   return S_OK;
 }
 
-STDAPI Foxtrot_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<Foxtrot>( CLSID_Foxtrot, rclsid, riid, ppi ); }
-STDAPI Foxtrot_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<Foxtrot>( CLSID_Foxtrot, rclsid, riid, ppi ); }
+STDAPI_( IFoxtrot * ) Foxtrot_new( void ) { return (IFoxtrot *)ComboxInstance<Foxtrot>( CLSID_Foxtrot, IID_IFoxtrot ); }

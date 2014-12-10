@@ -1,6 +1,8 @@
 #include <stdio.h>
 
 #include <Echo.h>
+
+#define COMBOX_CLASS Echo
 #include <combox.h>
 
 class Echo: public IEcho
@@ -37,6 +39,4 @@ STDMETHODIMP Echo::EchoSync( const int a )
   return S_OK;
 }
 
-STDAPI Echo_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<Echo>( CLSID_Echo, rclsid, riid, ppi ); }
-STDAPI Echo_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<Echo>( CLSID_Echo, rclsid, riid, ppi ); }
-STDAPI_( unsigned long ) Echo_ServerCount( const int i ) { return ServerCount(i); }
+STDAPI_( IEcho * ) Echo_new( void ) { return (IEcho *)ComboxInstance<Echo>( CLSID_Echo, IID_IEcho ); }

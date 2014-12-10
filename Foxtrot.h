@@ -5,3 +5,5 @@ static const GUID CLSID_Foxtrot = { 0xad826708, 0x75d9, 0x49d8, { 0xa6, 0x88, 0x
 
 STDAPI Foxtrot_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Foxtrot_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
+STDAPI_( unsigned int ) Foxtrot_ServerCount( const int i );
+STDAPI_( IFoxtrot * ) Foxtrot_new( void );

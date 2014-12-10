@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-static unsigned long ServerCount( const int delta )
+#if !defined( COMBOX_VTBL_ONLY ) || (defined( __cplusplus ) && !defined( CINTERFACE ))
+
+static unsigned int ServerCount( const int delta )
 {
-  static unsigned long server_count = 0UL;
+  static unsigned int server_count = 0UL;
   if( delta < -1 || delta > 1 )
   {
     server_count = 0UL;
@@ -19,11 +21,13 @@ static unsigned long ServerCount( const int delta )
   return server_count;
 }
 
+#endif
+
 #if defined( __cplusplus ) && !defined( CINTERFACE )
 
 template <typename TC> struct ComboxUnknown
 {
-  unsigned long RefCount;
+  unsigned int RefCount;
   ComboxUnknown() { RefCount = 1; }
   STDMETHOD( QueryInterface )( REFIID riid, void **ppi, REFIID iid, void *iface ) 
   {
@@ -63,12 +67,12 @@ template <typename TC> struct ComboxUnknown
     va_end( args );
     return r;
   }
-  STDMETHOD_( unsigned long, AddRef )()
+  STDMETHOD_( unsigned int, AddRef )()
   {
     ServerCount( 1 );
     return ++RefCount;
   }
-  STDMETHOD_( unsigned long, Release )( TC *instance )
+  STDMETHOD_( unsigned int, Release )( TC *instance )
   {
     ServerCount( -1 );
     if( --RefCount == 0 )
@@ -84,8 +88,8 @@ private:
 public:
   ComboxClassFactory() { ServerCount( -(int)ServerCount( 0 ) ); }
   STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) { return Unk.QueryInterface( riid, ppi, IID_IClassFactory, static_cast<IClassFactory *>(this) ); }
-  STDMETHOD_( unsigned long, AddRef )() { return Unk.AddRef(); }
-  STDMETHOD_( unsigned long, Release )() { return Unk.Release( this ); }
+  STDMETHOD_( unsigned int, AddRef )() { return Unk.AddRef(); }
+  STDMETHOD_( unsigned int, Release )() { return Unk.Release( this ); }
 
   STDMETHOD( CreateInstance )( THIS_ IUnknown *unk_outer, REFIID riid, void **ppi )
   {
@@ -120,7 +124,7 @@ public:
   }
 };
 
-template <typename CF> 
+template <typename CF>
 static HRESULT ComboxGetClassObject( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
 {
   if( IsEqualGUID( rclsid, clsid ) )
@@ -151,6 +155,16 @@ static void *ComboxInstance( REFCLSID rclsid, REFIID riid )
   return ComboxCreateInstance<CF>( rclsid, rclsid, riid, (LPVOID *)&pv ) == S_OK ? pv: (void *)0;
 }
 
+#define COMBOX_CONCAT_( a, b ) a##b
+#define COMBOX_CONCAT( a, b ) COMBOX_CONCAT_( a, b )
+
+#if defined( COMBOX_CLASS )
+class COMBOX_CLASS;
+STDAPI COMBOX_CONCAT( COMBOX_CLASS, _GetClassObject )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<COMBOX_CLASS>( COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), rclsid, riid, ppi ); }
+STDAPI COMBOX_CONCAT( COMBOX_CLASS, _CreateInstance )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<COMBOX_CLASS>( COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), rclsid, riid, ppi ); }
+STDAPI_( unsigned int ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i ) { return ServerCount(i); }
+#endif
+
 #else /* pure C implementation */
 
 #include <string.h>
@@ -174,7 +188,7 @@ static combox_t combox;
 typedef struct _ComboxUnknown_t
 {
   IUnknownVtbl *lpVtbl;
-  unsigned long RefCount;
+  unsigned int RefCount;
 } ComboxUnknown_t;
 
 #define COMBOX_VTBL ComboxUnknown_t ComboxInterface[ COMBOX_MAX_INTERFACE ]
@@ -182,7 +196,7 @@ typedef struct _ComboxUnknown_t
 typedef struct _ComboxClassFactory_t
 {
   IClassFactoryVtbl *lpVtbl;
-  unsigned long RefCount;
+  unsigned int RefCount;
 } ComboxClassFactory_t;
 
 static void *combox_instance( void *pi )
@@ -261,7 +275,7 @@ static STDMETHODIMP ComboxUnknown_QueryInterface( IUnknown *pi, REFIID riid, voi
   return E_NOINTERFACE;
 }
 
-static STDMETHODIMP_( unsigned long ) ComboxUnknown_AddRef( IUnknown *pi )
+static STDMETHODIMP_( unsigned int ) ComboxUnknown_AddRef( IUnknown *pi )
 {
   ComboxUnknown_t *p = combox_instance( pi );
 
@@ -270,10 +284,10 @@ static STDMETHODIMP_( unsigned long ) ComboxUnknown_AddRef( IUnknown *pi )
   return p->RefCount;
 }
 
-static STDMETHODIMP_( unsigned long ) ComboxUnknown_Release( IUnknown *pi )
+static STDMETHODIMP_( unsigned int ) ComboxUnknown_Release( IUnknown *pi )
 {
   ComboxUnknown_t *p = combox_instance( pi );
-  unsigned long i = --(p->RefCount);
+  unsigned int i = --(p->RefCount);
 
   if( i == 0 )
   {
@@ -299,7 +313,7 @@ static STDMETHODIMP ComboxClassFactory_QueryInterface( IClassFactory *pi, REFIID
   return S_OK;
 }
 
-static STDMETHODIMP_( unsigned long ) ComboxClassFactory_AddRef( IClassFactory *pi )
+static STDMETHODIMP_( unsigned int ) ComboxClassFactory_AddRef( IClassFactory *pi )
 {
   ComboxClassFactory_t *p = (ComboxClassFactory_t *)pi;
 
@@ -308,10 +322,10 @@ static STDMETHODIMP_( unsigned long ) ComboxClassFactory_AddRef( IClassFactory *
   return p->RefCount;
 }
 
-static STDMETHODIMP_( unsigned long ) ComboxClassFactory_Release( IClassFactory *pi )
+static STDMETHODIMP_( unsigned int ) ComboxClassFactory_Release( IClassFactory *pi )
 {
   ComboxClassFactory_t *p = (ComboxClassFactory_t *)pi;
-  unsigned long i = --(p->RefCount);
+  unsigned int i = --(p->RefCount);
 
   ServerCount( -1 );
   return i;
@@ -424,9 +438,18 @@ static HRESULT STDMETHODCALLTYPE ComboxCreateInstance( REFCLSID rclsid, REFIID r
 
 static void *ComboxInstance( void )
 {
-  void *pv = (void *)0; 
+  void *pv = (void *)0;
   return (ComboxCreateInstance( combox.class_id, combox.interface_id[0], (LPVOID *)&pv ) == S_OK) ? pv: (void *)0;
 }
+
+#define COMBOX_CONCAT_( a, b ) a##b
+#define COMBOX_CONCAT( a, b ) COMBOX_CONCAT_( a, b )
+
+#if defined( COMBOX_CLASS )
+STDAPI COMBOX_CONCAT( COMBOX_CLASS, _GetClassObject )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }
+STDAPI COMBOX_CONCAT( COMBOX_CLASS, _CreateInstance )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }
+STDAPI_( unsigned int ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i ) { return ServerCount(i); }
+#endif
 
 #endif
 

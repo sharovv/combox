@@ -8,7 +8,6 @@ static const GUID IID_IAlpha = { 0xdc126a90, 0xd709, 0x4a52, { 0x94, 0x6a, 0x60,
 
 DECLARE_INTERFACE( IAlpha )
 {
-  /* Методы наследуемого интерфейса IUnknown */
   STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;
   STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;
   STDMETHOD_( unsigned long, Release )( THIS ) PURE;

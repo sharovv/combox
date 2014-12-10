@@ -8,7 +8,6 @@ static const GUID IID_IBravo = { 0x11571d41, 0xc578, 0x4034, { 0x92, 0x2f, 0x5b,
 
 DECLARE_INTERFACE( IBravo )
 {
-  /* Методы наследуемого интерфейса IUnknown */
   STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;
   STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;
   STDMETHOD_( unsigned long, Release )( THIS ) PURE;

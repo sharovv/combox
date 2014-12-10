@@ -45,7 +45,7 @@
 
 #ifndef _HRESULT_DEFINED
 #define _HRESULT_DEFINED
-typedef long HRESULT;
+typedef int HRESULT;
 #endif /* !_HRESULT_DEFINED */
 
 #ifndef STDMETHODCALLTYPE
@@ -132,7 +132,7 @@ struct i##Vtbl
 #define GUID_DEFINED
 typedef struct  _GUID
 {
-  unsigned long Data1;
+  unsigned int Data1;
   unsigned short Data2;
   unsigned short Data3;
   unsigned char Data4[ 8 ];
@@ -217,8 +217,8 @@ typedef CLSID FAR *LPCLSID;
 DECLARE_INTERFACE( IUnknown )
 {
   STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void FAR * FAR *ppvObject) PURE;
-  STDMETHOD_( unsigned long, AddRef ) ( THIS ) PURE;
-  STDMETHOD_( unsigned long, Release ) ( THIS ) PURE;
+  STDMETHOD_( unsigned int, AddRef ) ( THIS ) PURE;
+  STDMETHOD_( unsigned int, Release ) ( THIS ) PURE;
 };
 
 typedef IUnknown FAR *LPUNKNOWN;
@@ -233,8 +233,8 @@ static const GUID IID_IUnknown =
 DECLARE_INTERFACE( IClassFactory )
 {
   STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void FAR * FAR *ppvObject) PURE;
-  STDMETHOD_( unsigned long, AddRef ) ( THIS ) PURE;
-  STDMETHOD_( unsigned long, Release ) ( THIS ) PURE;
+  STDMETHOD_( unsigned int, AddRef ) ( THIS ) PURE;
+  STDMETHOD_( unsigned int, Release ) ( THIS ) PURE;
 
   STDMETHOD( CreateInstance )( THIS_ IUnknown FAR *pUnkOuter, REFIID riid, void FAR *FAR *ppvObject ) PURE;
   STDMETHOD( LockServer )( THIS_ int fLock ) PURE;
@@ -292,10 +292,8 @@ static inline bool IsEqualGUID( const GUID &a, const GUID &b )
 */
 #else
 #define IsEqualGUID( a, b ) \
-       (((unsigned long *) a)[0] == ((unsigned long *) b)[0] && \
-        ((unsigned long *) a)[1] == ((unsigned long *) b)[1] && \
-        ((unsigned long *) a)[2] == ((unsigned long *) b)[2] && \
-        ((unsigned long *) a)[3] == ((unsigned long *) b)[3])
+       (((long long *)a)[0] == ((long long *)b)[0] && \
+        ((long long *)a)[1] == ((long long *)b)[1])
 #endif
 
 #define CoInitialize( pvReserved )

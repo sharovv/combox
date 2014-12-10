@@ -8,7 +8,6 @@ static const GUID IID_ICharlie = { 0x633c197b, 0xf1c4, 0x42fb, { 0xa3, 0x26, 0xf
 
 DECLARE_INTERFACE( ICharlie )
 {
-  /* Методы наследуемого интерфейса IUnknown */
   STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;
   STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;
   STDMETHOD_( unsigned long, Release )( THIS ) PURE;

@@ -13,12 +13,11 @@ int main()
   IEcho *echo;
   IFoxtrot *foxtrot;
 
-  alpha = Alpha();
+  alpha = Alpha_new();
   alpha->lpVtbl->AlphaSet( alpha, 66 );
   alpha->lpVtbl->Release( alpha );
 
-  if( Delta_CreateInstance( &CLSID_Delta, &IID_IBravo, (void **)&bravo ) != S_OK )
-    return printf( "%s(%d) Delta_CreateInstance failed\n", __FILE__, __LINE__ );
+  bravo = Delta_new();
 
   bravo->lpVtbl->BravoPush( bravo, 77 );
 
@@ -29,7 +28,7 @@ int main()
 
   if( bravo->lpVtbl->QueryInterface( bravo, &IID_IAlpha, (void **)&alpha ) != S_OK )
     return printf( "%s(%d) QueryInterface failed\n", __FILE__, __LINE__ );
-  
+
   alpha->lpVtbl->AlphaSet( alpha, 166 );
 
   alpha->lpVtbl->Release( alpha );
@@ -48,13 +47,11 @@ int main()
   bravo->lpVtbl->Release( bravo );
   charlie->lpVtbl->Release( charlie );
 
-  if( Echo_CreateInstance( &CLSID_Echo, &IID_IEcho, (void **)&echo ) != S_OK )
-    return printf( "%s(%d) Echo_CreateInstance failed\n", __FILE__, __LINE__ );
+  echo = Echo_new();
   echo->lpVtbl->EchoSync( echo, 66 );
   echo->lpVtbl->Release( echo );
 
-  if( Foxtrot_CreateInstance( &CLSID_Foxtrot, &IID_IFoxtrot, (void **)&foxtrot ) != S_OK )
-    return printf( "%s(%d) Foxtrot_CreateInstance failed\n", __FILE__, __LINE__ );
+  foxtrot = Foxtrot_new();
   foxtrot->lpVtbl->FoxtrotSum( foxtrot, 222, 333 );
   if( foxtrot->lpVtbl->QueryInterface( foxtrot, &IID_IEcho, (void **)&echo ) != S_OK )
     return printf( "%s(%d) Foxtrot::QueryInterface failed\n", __FILE__, __LINE__ );

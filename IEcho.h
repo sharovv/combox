@@ -8,7 +8,6 @@ static const GUID IID_IEcho = { 0x6d0bbc3d, 0x59a3, 0x4791, { 0x97, 0x1c, 0x7d, 
 
 DECLARE_INTERFACE( IEcho )
 {
-  /* Методы наследуемого интерфейса IUnknown */
   STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;
   STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;
   STDMETHOD_( unsigned long, Release )( THIS ) PURE;

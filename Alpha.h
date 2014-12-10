@@ -1,3 +1,6 @@
+#ifndef _Alpha_h
+#define _Alpha_h
+
 #include <IAlpha.h>
 
 // {A837CA31-8ADE-48c4-A543-FAEBE363EF6B}
@@ -5,4 +8,7 @@ static const GUID CLSID_Alpha = { 0xa837ca31, 0x8ade, 0x48c4, { 0xa5, 0x43, 0xfa
 
 STDAPI Alpha_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Alpha_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
-STDAPI_( IAlpha * ) Alpha( void );
+STDAPI_( unsigned int ) Alpha_ServerCount( const int i );
+STDAPI_( IAlpha * ) Alpha_new( void );
+
+#endif

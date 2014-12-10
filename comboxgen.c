@@ -6,7 +6,7 @@ static void create_guid( GUID *id ) { CoCreateGuid( id ); }
 #else
 typedef struct  _GUID
 {
-  unsigned long Data1;
+  unsigned int Data1;
   unsigned short Data2;
   unsigned short Data3;
   unsigned char Data4[ 8 ];
@@ -36,8 +36,8 @@ void print_interface( const char *name_interface )
   printf( "#define INTERFACE %s\n\n", name_interface );
   printf( "DECLARE_INTERFACE( %s )\n{\n", name_interface );
   printf( "  STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;\n" );
-  printf( "  STDMETHOD_( unsigned long, AddRef )( THIS ) PURE;\n" );
-  printf( "  STDMETHOD_( unsigned long, Release )( THIS ) PURE;\n\n" );
+  printf( "  STDMETHOD_( unsigned int, AddRef )( THIS ) PURE;\n" );
+  printf( "  STDMETHOD_( unsigned int, Release )( THIS ) PURE;\n\n" );
   printf( "  STDMETHOD( Method1 )( THIS_ const int ) PURE;\n};\n\n" );
   printf( "#endif\n" );
 }
@@ -61,14 +61,15 @@ void print_header( const char *name_class, const char *name_interface )
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
-  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i );\n", name_class );
+  printf( "STDAPI_( unsigned int ) %s_ServerCount( const int i );\n", name_class );
   printf( "STDAPI_( %s * ) %s_new( void );\n\n", name_interface, name_class );
   printf( "#endif\n" );
 }
 
 void print_c_class( const char *name_class, const char *name_interface )
 {
-  printf( "#include <%s.h>\n", name_class );
+  printf( "#include <%s.h>\n\n", name_class );
+  printf( "#define COMBOX_CLASS %s\n", name_class );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
   printf( "typedef struct _%s\n", name_class );
@@ -100,15 +101,13 @@ void print_c_class( const char *name_class, const char *name_interface )
   printf( "static %sVtbl Vtbl = { 0, 0, 0, Method1 };\n", name_interface );
   printf( "static combox_t combox = { &CLSID_%s, 1, { &IID_%s }, { &Vtbl }, sizeof( %s ), init, cleanup };\n", name_class, name_interface, name_class );
   printf( "\n" );
-  printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }\n", name_class );
-  printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }\n", name_class );
-  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
   printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance(); }\n", name_interface, name_class, name_interface );
 }
 
 void print_cpp_class( const char *name_class, const char *name_interface )
 {
-  printf( "#include <%s.h>\n", name_class );
+  printf( "#include <%s.h>\n\n", name_class );
+  printf( "#define COMBOX_CLASS %s\n", name_class );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
   printf( "class %s: public %s\n", name_class, name_interface );
@@ -121,8 +120,8 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "  ~%s();\n", name_class );
   printf( "\n" );
   printf( "  STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) { return Unk.QueryInterface( riid, ppi, IID_%s, static_cast<%s *>(this) ); }\n", name_interface, name_interface );
-  printf( "  STDMETHOD_( unsigned long, AddRef )() { return Unk.AddRef(); }\n" );
-  printf( "  STDMETHOD_( unsigned long, Release )() { return Unk.Release( this ); }\n" );
+  printf( "  STDMETHOD_( unsigned int, AddRef )() { return Unk.AddRef(); }\n" );
+  printf( "  STDMETHOD_( unsigned int, Release )() { return Unk.Release( this ); }\n" );
   printf( "\n" );
   printf( "  STDMETHOD( Method1 )( const int a );\n" );
   printf( "};\n" );
@@ -142,9 +141,6 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "  return S_OK;\n" );
   printf( "}\n" );
   printf( "\n" );
-  printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
-  printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<%s>( CLSID_%s, rclsid, riid, ppi ); }\n", name_class, name_class, name_class );
-  printf( "STDAPI_( unsigned long ) %s_ServerCount( const int i ) { return ServerCount(i); }\n", name_class );
   printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance<%s>( CLSID_%s, IID_%s); }\n", name_interface, name_class, name_interface, name_class, name_class, name_interface );
 }
 
