@@ -172,6 +172,16 @@ STDAPI_( unsigned int ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i
 #define COMBOX_MAX_INTERFACE 4
 #define COMBOX_FIRST_INTERFACE 0x80000000UL
 
+typedef struct _ComboxUnknown_t
+{
+  IUnknownVtbl *lpVtbl;
+  unsigned int RefCount;
+} ComboxUnknown_t;
+
+#define COMBOX_VTBL ComboxUnknown_t ComboxInterface[ COMBOX_MAX_INTERFACE ]
+
+#if !defined( COMBOX_VTBL_ONLY )
+
 typedef struct _combox_t
 {
   const GUID *class_id;
@@ -184,14 +194,6 @@ typedef struct _combox_t
 } combox_t;
 
 static combox_t combox;
-
-typedef struct _ComboxUnknown_t
-{
-  IUnknownVtbl *lpVtbl;
-  unsigned int RefCount;
-} ComboxUnknown_t;
-
-#define COMBOX_VTBL ComboxUnknown_t ComboxInterface[ COMBOX_MAX_INTERFACE ]
 
 typedef struct _ComboxClassFactory_t
 {
@@ -449,6 +451,8 @@ static void *ComboxInstance( void )
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _GetClassObject )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _CreateInstance )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }
 STDAPI_( unsigned int ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i ) { return ServerCount(i); }
+#endif
+
 #endif
 
 #endif
