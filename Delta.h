@@ -6,5 +6,5 @@ static const GUID CLSID_Delta = { 0x455e8ad2, 0x1a02, 0x4687, { 0xb8, 0xa5, 0x62
 
 STDAPI Delta_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Delta_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
-STDAPI_( unsigned int ) Delta_ServerCount( const int i );
+STDAPI_( ULONG ) Delta_ServerCount( const int i );
 STDAPI_( IBravo * ) Delta_new( void );

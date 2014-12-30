@@ -15,14 +15,14 @@ public:
   Foxtrot();
   ~Foxtrot();
 
-  STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) 
+  STDMETHOD( QueryInterface )( REFIID riid, void **ppi )
   {
-    return Unk.QueryInterfacev( riid, ppi, 
+    return Unk.QueryInterfacev( riid, ppi,
       &IID_IFoxtrot, static_cast<IFoxtrot *>(this),
-      &IID_IEcho, static_cast<IEcho *>(this), NULL ); 
+      &IID_IEcho, static_cast<IEcho *>(this), NULL );
   }
-  STDMETHOD_( unsigned long, AddRef )() { return Unk.AddRef(); }
-  STDMETHOD_( unsigned long, Release )() { return Unk.Release( this ); }
+  STDMETHOD_( ULONG, AddRef )() { return Unk.AddRef(); }
+  STDMETHOD_( ULONG, Release )() { return Unk.Release( this ); }
 
   STDMETHOD( EchoSync ) ( THIS_ const int a );
   STDMETHOD( FoxtrotSum ) ( THIS_ const int a, const int b );

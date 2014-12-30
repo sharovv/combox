@@ -36,8 +36,8 @@ void print_interface( const char *name_interface )
   printf( "#define INTERFACE %s\n\n", name_interface );
   printf( "DECLARE_INTERFACE( %s )\n{\n", name_interface );
   printf( "  STDMETHOD( QueryInterface )( THIS_ REFIID riid, void **ppi ) PURE;\n" );
-  printf( "  STDMETHOD_( unsigned int, AddRef )( THIS ) PURE;\n" );
-  printf( "  STDMETHOD_( unsigned int, Release )( THIS ) PURE;\n\n" );
+  printf( "  STDMETHOD_( ULONG, AddRef )( THIS ) PURE;\n" );
+  printf( "  STDMETHOD_( ULONG, Release )( THIS ) PURE;\n\n" );
   printf( "  STDMETHOD( Method1 )( THIS_ const int ) PURE;\n};\n\n" );
   printf( "#endif\n" );
 }
@@ -61,7 +61,7 @@ void print_header( const char *name_class, const char *name_interface )
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
   printf( "STDAPI %s_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
   printf( "STDAPI %s_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );\n", name_class );
-  printf( "STDAPI_( unsigned int ) %s_ServerCount( const int i );\n", name_class );
+  printf( "STDAPI_( ULONG ) %s_ServerCount( const int i );\n", name_class );
   printf( "STDAPI_( %s * ) %s_new( void );\n\n", name_interface, name_class );
   printf( "#endif\n" );
 }
@@ -120,8 +120,8 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "  ~%s();\n", name_class );
   printf( "\n" );
   printf( "  STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) { return Unk.QueryInterface( riid, ppi, IID_%s, static_cast<%s *>(this) ); }\n", name_interface, name_interface );
-  printf( "  STDMETHOD_( unsigned int, AddRef )() { return Unk.AddRef(); }\n" );
-  printf( "  STDMETHOD_( unsigned int, Release )() { return Unk.Release( this ); }\n" );
+  printf( "  STDMETHOD_( ULONG, AddRef )() { return Unk.AddRef(); }\n" );
+  printf( "  STDMETHOD_( ULONG, Release )() { return Unk.Release( this ); }\n" );
   printf( "\n" );
   printf( "  STDMETHOD( Method1 )( const int a );\n" );
   printf( "};\n" );

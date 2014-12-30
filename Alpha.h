@@ -8,7 +8,7 @@ static const GUID CLSID_Alpha = { 0xa837ca31, 0x8ade, 0x48c4, { 0xa5, 0x43, 0xfa
 
 STDAPI Alpha_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Alpha_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
-STDAPI_( unsigned int ) Alpha_ServerCount( const int i );
+STDAPI_( ULONG ) Alpha_ServerCount( const int i );
 STDAPI_( IAlpha * ) Alpha_new( void );
 
 #endif

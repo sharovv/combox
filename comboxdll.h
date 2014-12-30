@@ -52,7 +52,7 @@ static HRESULT ComboxDllRegisterServer( const GUID *clsid, const char *desc )
   }
   RegCloseKey( hkey );
 
-  //добавляем ThreadingModel к InprocServer
+  //РґРѕР±Р°РІР»СЏРµРј ThreadingModel Рє InprocServer
   strcat( tmp, "\\InprocServer32" );
   if( RegOpenKey( HKEY_CLASSES_ROOT, tmp, &hkey ) != ERROR_SUCCESS )
     return SELFREG_E_CLASS;

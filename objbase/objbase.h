@@ -11,6 +11,14 @@
 #define BOOL int
 #endif
 
+#ifndef LONG
+#define LONG int
+#endif
+
+#ifndef ULONG
+#define ULONG unsigned int
+#endif
+
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -32,7 +40,7 @@
 #endif
 
 #ifndef LPVOID
-#define LPVOID void FAR *
+#define LPVOID void *
 #endif
 
 #ifndef EXTERN_C
@@ -105,19 +113,19 @@ typedef int HRESULT;
 #define STDMETHOD(m) HRESULT (STDMETHODCALLTYPE *m)
 #define STDMETHOD_(t,m) t (STDMETHODCALLTYPE *m)
 #define PURE
-#define THIS_ INTERFACE FAR *,
-#define THIS INTERFACE FAR *
+#define THIS_ INTERFACE *,
+#define THIS INTERFACE *
 #ifdef CONST_VTABLE
 #define CONST_VTBL const
 #define DECLARE_INTERFACE(i) typedef interface i {\
-const struct i##Vtbl FAR* lpVtbl;\
+const struct i##Vtbl *lpVtbl;\
 }i;\
 typedef const struct i##Vtbl i##Vtbl;\
 const struct i##Vtbl
 #else
 #define CONST_VTBL
 #define DECLARE_INTERFACE(i) typedef interface i {\
-struct i##Vtbl FAR* lpVtbl;\
+struct i##Vtbl * lpVtbl;\
 } i;\
 typedef struct i##Vtbl i##Vtbl;\
 struct i##Vtbl
@@ -141,20 +149,20 @@ typedef struct  _GUID
 #endif /* !GUID_DEFINED */
 #if !defined( __LPGUID_DEFINED__ )
 #define __LPGUID_DEFINED__
-typedef GUID FAR *LPGUID;
+typedef GUID *LPGUID;
 
 #endif /* !__LPGUID_DEFINED__ */
 
 #if !defined( __IID_DEFINED__ )
 #define __IID_DEFINED__
 typedef GUID IID;
-typedef IID FAR *LPIID;
+typedef IID *LPIID;
 
 #define IID_NULL            GUID_NULL
 #define IsEqualIID(riid1, riid2) IsEqualGUID(riid1, riid2)
 typedef GUID CLSID;
 
-typedef CLSID FAR *LPCLSID;
+typedef CLSID *LPCLSID;
 
 #define CLSID_NULL          GUID_NULL
 #define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
@@ -216,12 +224,10 @@ typedef CLSID FAR *LPCLSID;
 
 DECLARE_INTERFACE( IUnknown )
 {
-  STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void FAR * FAR *ppvObject) PURE;
-  STDMETHOD_( unsigned int, AddRef ) ( THIS ) PURE;
-  STDMETHOD_( unsigned int, Release ) ( THIS ) PURE;
+  STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void **ppvObject ) PURE;
+  STDMETHOD_( ULONG, AddRef ) ( THIS ) PURE;
+  STDMETHOD_( ULONG, Release ) ( THIS ) PURE;
 };
-
-typedef IUnknown FAR *LPUNKNOWN;
 
 /* {00000000-0000-0000-C000-000000000046} */
 static const GUID IID_IUnknown =
@@ -232,11 +238,11 @@ static const GUID IID_IUnknown =
 
 DECLARE_INTERFACE( IClassFactory )
 {
-  STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void FAR * FAR *ppvObject) PURE;
-  STDMETHOD_( unsigned int, AddRef ) ( THIS ) PURE;
-  STDMETHOD_( unsigned int, Release ) ( THIS ) PURE;
+  STDMETHOD( QueryInterface ) ( THIS_ REFIID riid, void **ppvObject) PURE;
+  STDMETHOD_( ULONG, AddRef ) ( THIS ) PURE;
+  STDMETHOD_( ULONG, Release ) ( THIS ) PURE;
 
-  STDMETHOD( CreateInstance )( THIS_ IUnknown FAR *pUnkOuter, REFIID riid, void FAR *FAR *ppvObject ) PURE;
+  STDMETHOD( CreateInstance )( THIS_ IUnknown *pUnkOuter, REFIID riid, void **ppvObject ) PURE;
   STDMETHOD( LockServer )( THIS_ int fLock ) PURE;
 };
 
@@ -277,6 +283,7 @@ static inline bool IsEqualGUID( const GUID &a, const GUID &b )
     (a.Data4[6] == b.Data4[6]) &&
     (a.Data4[7] == b.Data4[7]));
 }
+
 /*
 #define IsEqualGUID( a, b ) (((a)->Data1 == (b)->Data1) && \
                              ((a)->Data2 == (b)->Data2) && \
@@ -306,6 +313,7 @@ static inline bool IsEqualGUID( const GUID &a, const GUID &b )
 /* OLE compatible error codes */
 #define E_FAIL                           ((HRESULT)(0x80004005L))
 #define E_NOINTERFACE                    ((HRESULT)(0x80004002L))
+#define E_POINTER                        ((HRESULT)(0x80004003L))
 #define CLASS_E_NOAGGREGATION            ((HRESULT)(0x80040110L))
 #define CLASS_E_CLASSNOTAVAILABLE        ((HRESULT)(0x80040111L))
 #define E_OUTOFMEMORY                    ((HRESULT)(0x8007000EL))

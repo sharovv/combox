@@ -15,8 +15,8 @@ public:
   ~Echo();
 
   STDMETHOD( QueryInterface )( REFIID riid, void **ppi ) { return Unk.QueryInterface( riid, ppi, IID_IEcho, static_cast<IEcho *>(this) ); }
-  STDMETHOD_( unsigned long, AddRef )() { return Unk.AddRef(); }
-  STDMETHOD_( unsigned long, Release )() { return Unk.Release( this ); }
+  STDMETHOD_( ULONG, AddRef )() { return Unk.AddRef(); }
+  STDMETHOD_( ULONG, Release )() { return Unk.Release( this ); }
 
   STDMETHOD( EchoSync )( const int a );
 };

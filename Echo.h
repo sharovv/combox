@@ -5,5 +5,5 @@ static const GUID CLSID_Echo = { 0x238e2503, 0xc714, 0x4b4d, { 0xa3, 0x8b, 0x1d,
 
 STDAPI Echo_GetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
 STDAPI Echo_CreateInstance( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
-STDAPI_( unsigned int ) Echo_ServerCount( const int i );
+STDAPI_( ULONG ) Echo_ServerCount( const int i );
 STDAPI_( IEcho * ) Echo_new( void );
