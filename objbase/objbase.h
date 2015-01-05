@@ -57,40 +57,25 @@ typedef int HRESULT;
 #endif /* !_HRESULT_DEFINED */
 
 #ifndef STDMETHODCALLTYPE
-#ifdef _WIN32
-#define STDMETHODCALLTYPE __stdcall
-#else
 #define STDMETHODCALLTYPE
-#endif
 #endif
 
 #ifndef STDAPICALLTYPE
-#ifdef _WIN32
-#define STDAPICALLTYPE __stdcall
-#else
 #define STDAPICALLTYPE
-#endif
 #endif
 
 #ifndef STDAPI
-#if defined( _WIN32 ) && !defined( _MSC_VER )
-#define STDAPI EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE
-#else
 #define STDAPI EXTERN_C HRESULT STDAPICALLTYPE
-#endif
 #endif
 
 #ifndef STDAPI_
-#if defined( _WIN32 ) && !defined( _MSC_VER )
-#define STDAPI_(t) EXTERN_C __declspec(dllexport) t STDAPICALLTYPE
-#else
 #define STDAPI_(t) EXTERN_C t STDAPICALLTYPE
-#endif
 #endif
 
 #ifndef STDMETHODIMP
 #define STDMETHODIMP HRESULT STDMETHODCALLTYPE
 #endif
+
 #ifndef STDMETHODIMP_
 #define STDMETHODIMP_(t) t STDMETHODCALLTYPE
 #endif

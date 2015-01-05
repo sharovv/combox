@@ -3,6 +3,7 @@
 #include <Echo.h>
 
 #define COMBOX_CLASS Echo
+#define COMBOX_INTERFACE IEcho
 #include <combox.h>
 
 class Echo: public IEcho
@@ -38,5 +39,3 @@ STDMETHODIMP Echo::EchoSync( const int a )
   Internal = a;
   return S_OK;
 }
-
-STDAPI_( IEcho * ) Echo_new( void ) { return (IEcho *)ComboxInstance<Echo>( CLSID_Echo, IID_IEcho ); }

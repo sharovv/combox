@@ -70,6 +70,7 @@ void print_c_class( const char *name_class, const char *name_interface )
 {
   printf( "#include <%s.h>\n\n", name_class );
   printf( "#define COMBOX_CLASS %s\n", name_class );
+  printf( "#define COMBOX_INTERFACE %s\n", name_interface );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
   printf( "typedef struct _%s\n", name_class );
@@ -100,14 +101,13 @@ void print_c_class( const char *name_class, const char *name_interface )
   printf( "\n" );
   printf( "static %sVtbl Vtbl = { 0, 0, 0, Method1 };\n", name_interface );
   printf( "static combox_t combox = { &CLSID_%s, 1, { &IID_%s }, { &Vtbl }, sizeof( %s ), init, cleanup };\n", name_class, name_interface, name_class );
-  printf( "\n" );
-  printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance(); }\n", name_interface, name_class, name_interface );
 }
 
 void print_cpp_class( const char *name_class, const char *name_interface )
 {
   printf( "#include <%s.h>\n\n", name_class );
   printf( "#define COMBOX_CLASS %s\n", name_class );
+  printf( "#define COMBOX_INTERFACE %s\n", name_interface );
   printf( "#include <combox.h>\n" );
   printf( "\n" );
   printf( "class %s: public %s\n", name_class, name_interface );
@@ -140,8 +140,6 @@ void print_cpp_class( const char *name_class, const char *name_interface )
   printf( "  Internal = a;\n" );
   printf( "  return S_OK;\n" );
   printf( "}\n" );
-  printf( "\n" );
-  printf( "STDAPI_( %s * ) %s_new( void ) { return (%s *)ComboxInstance<%s>( CLSID_%s, IID_%s); }\n", name_interface, name_class, name_interface, name_class, name_class, name_interface );
 }
 
 int main( int argc, char *argv[] )
@@ -169,7 +167,7 @@ int main( int argc, char *argv[] )
   }
   if( err )
   {
-    fprintf( stderr, 
+    fprintf( stderr,
       "Usage:\n\n"
       "comboxgen interface <Interface>\n"
       "comboxgen header <Class> <Interface>\n"

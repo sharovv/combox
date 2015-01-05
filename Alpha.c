@@ -3,6 +3,7 @@
 #include <Alpha.h>
 
 #define COMBOX_CLASS Alpha
+#define COMBOX_INTERFACE IAlpha
 #include <combox.h>
 
 typedef struct _Alpha
@@ -40,4 +41,3 @@ static STDMETHODIMP AlphaSet( IAlpha *pi, const int a )
 
 static IAlphaVtbl Vtbl = { 0, 0, 0, AlphaSet };
 static combox_t combox = { &CLSID_Alpha, 1, { &IID_IAlpha }, { &Vtbl }, sizeof( Alpha ), init, cleanup };
-STDAPI_( IAlpha * ) Alpha_new( void ) { return (IAlpha *)ComboxInstance(); }

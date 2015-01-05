@@ -148,29 +148,32 @@ static HRESULT ComboxCreateInstance( REFCLSID clsid, REFCLSID rclsid, REFIID rii
   return r;
 }
 
-template <typename CF>
-static void *ComboxInstance( REFCLSID rclsid, REFIID riid )
-{
-  void *pv;
-  return ComboxCreateInstance<CF>( rclsid, rclsid, riid, (LPVOID *)&pv ) == S_OK ? pv: (void *)0;
-}
+#if defined( COMBOX_CLASS )
 
 #define COMBOX_CONCAT_( a, b ) a##b
 #define COMBOX_CONCAT( a, b ) COMBOX_CONCAT_( a, b )
 
-#if defined( COMBOX_CLASS )
 class COMBOX_CLASS;
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _GetClassObject )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject<COMBOX_CLASS>( COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), rclsid, riid, ppi ); }
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _CreateInstance )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance<COMBOX_CLASS>( COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), rclsid, riid, ppi ); }
 STDAPI_( ULONG ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i ) { return ServerCount(i); }
-#endif
+
+#if defined( COMBOX_INTERFACE )
+STDAPI_( COMBOX_INTERFACE * ) COMBOX_CONCAT( COMBOX_CLASS, _new )( void )
+{
+  COMBOX_INTERFACE *iface = (COMBOX_INTERFACE *)0;
+  return ComboxCreateInstance<COMBOX_CLASS>( COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), COMBOX_CONCAT( CLSID_, COMBOX_CLASS ), COMBOX_CONCAT( IID_, COMBOX_INTERFACE ), (LPVOID *)&iface ) == S_OK ? iface: (COMBOX_INTERFACE *)0;
+}
+#endif /* COMBOX_INTERFACE */
+
+#endif /* COMBOX_CLASS */
 
 #else /* pure C implementation */
 
 #include <string.h>
 
 #define COMBOX_MAX_INTERFACE 4
-#define COMBOX_FIRST_INTERFACE 0x80000000UL
+#define COMBOX_FIRST_INTERFACE 0x80000000U
 
 typedef struct _ComboxUnknown_t
 {
@@ -438,23 +441,27 @@ static HRESULT STDMETHODCALLTYPE ComboxCreateInstance( REFCLSID rclsid, REFIID r
   return r;
 }
 
-static void *ComboxInstance( void )
-{
-  void *pv = (void *)0;
-  return (ComboxCreateInstance( combox.class_id, combox.interface_id[0], (LPVOID *)&pv ) == S_OK) ? pv: (void *)0;
-}
+#if defined( COMBOX_CLASS )
 
 #define COMBOX_CONCAT_( a, b ) a##b
 #define COMBOX_CONCAT( a, b ) COMBOX_CONCAT_( a, b )
 
-#if defined( COMBOX_CLASS )
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _GetClassObject )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxGetClassObject( rclsid, riid, ppi ); }
 STDAPI COMBOX_CONCAT( COMBOX_CLASS, _CreateInstance )( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxCreateInstance( rclsid, riid, ppi ); }
 STDAPI_( ULONG ) COMBOX_CONCAT( COMBOX_CLASS, _ServerCount )( const int i ) { return ServerCount(i); }
-#endif
 
-#endif
+#if defined( COMBOX_INTERFACE )
+STDAPI_( COMBOX_INTERFACE * ) COMBOX_CONCAT( COMBOX_CLASS, _new )( void )
+{
+  COMBOX_INTERFACE *iface = (COMBOX_INTERFACE *)0;
+  return (ComboxCreateInstance( COMBOX_CONCAT( &CLSID_, COMBOX_CLASS ), COMBOX_CONCAT( &IID_, COMBOX_INTERFACE ), (LPVOID *)&iface ) == S_OK) ? iface: (COMBOX_INTERFACE *)0;
+}
+#endif /* COMBOX_INTERFACE */
 
-#endif
+#endif /* COMBOX_CLASS */
 
-#endif
+#endif /* !COMBOX_VTBL_ONLY */
+
+#endif /* __cplusplus */
+
+#endif /* _combox_h */

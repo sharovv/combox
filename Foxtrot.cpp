@@ -4,6 +4,7 @@
 #include <IEcho.h>
 
 #define COMBOX_CLASS Foxtrot
+#define COMBOX_INTERFACE IFoxtrot
 #include <combox.h>
 
 class Foxtrot: public IFoxtrot, IEcho
@@ -52,5 +53,3 @@ STDMETHODIMP Foxtrot::FoxtrotSum( const int a, const int b )
   Internal = a + b;
   return S_OK;
 }
-
-STDAPI_( IFoxtrot * ) Foxtrot_new( void ) { return (IFoxtrot *)ComboxInstance<Foxtrot>( CLSID_Foxtrot, IID_IFoxtrot ); }

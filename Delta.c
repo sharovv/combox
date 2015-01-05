@@ -4,6 +4,7 @@
 #include <Alpha.h>
 
 #define COMBOX_CLASS Delta
+#define COMBOX_INTERFACE IBravo
 #include <combox.h>
 
 typedef struct _Delta
@@ -71,4 +72,3 @@ static STDMETHODIMP Charlie_QueryInterface( ICharlie *pi, REFIID riid, void **pp
 static IBravoVtbl BravoVtbl = { Bravo_QueryInterface, 0, 0, BravoPush };
 static ICharlieVtbl CharlieVtbl = { Charlie_QueryInterface, 0, 0, CharlieTest };
 static combox_t combox = { &CLSID_Delta, 2, { &IID_IBravo, &IID_ICharlie }, { &BravoVtbl, &CharlieVtbl }, sizeof( Delta ), init, cleanup };
-STDAPI_( IBravo * ) Delta_new( void ) { return (IBravo *)ComboxInstance(); }
