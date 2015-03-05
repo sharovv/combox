@@ -2,6 +2,7 @@
 #define _comboxdll_h
 
 #include <objbase.h>
+#include <combox.h>
 
 #if defined( _WIN32 )
 
@@ -110,7 +111,7 @@ BOOL APIENTRY DllMain( HANDLE module, DWORD reason, LPVOID reserved ) { return C
 #else
 
 #define COMBOX_DLL( clsid, get_class_object, server_count, description ) \
-STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return class_name##_GetClassObject( rclsid, riid, ppi ); }
+STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return get_class_object( rclsid, riid, ppi ); }
 
 #endif
 
