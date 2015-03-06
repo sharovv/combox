@@ -127,7 +127,7 @@ public:
 template <typename CF>
 static HRESULT ComboxGetClassObject( REFCLSID clsid, REFCLSID rclsid, REFIID riid, LPVOID *ppi )
 {
-  if( IsEqualGUID( rclsid, clsid ) )
+  if( IsEqualGUID( rclsid, clsid ) || IsEqualGUID( rclsid, IID_IUnknown ) )
   {
     static ComboxClassFactory<CF> cf;
     return cf.QueryInterface( riid, ppi );
@@ -416,7 +416,7 @@ static HRESULT STDMETHODCALLTYPE ComboxGetClassObject( REFCLSID rclsid, REFIID r
 {
   *ppi = 0;
 
-  if( IsEqualGUID( rclsid, combox.class_id ) )
+  if( IsEqualGUID( rclsid, combox.class_id ) || IsEqualGUID( rclsid, &IID_IUnknown ) )
   {
     return ComboxClassFactory.lpVtbl->QueryInterface( (IClassFactory *)&ComboxClassFactory, riid, ppi );
   }
