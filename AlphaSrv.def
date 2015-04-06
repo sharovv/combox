@@ -1,0 +1,7 @@
+LIBRARY "AlphaSrv"
+EXPORTS
+DllGetClassObject PRIVATE
+DllCanUnloadNow PRIVATE
+DllRegisterServer PRIVATE
+DllUnregisterServer PRIVATE
+Alpha_new PRIVATE

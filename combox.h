@@ -7,7 +7,7 @@
 
 #if !defined( COMBOX_VTBL_ONLY ) || (defined( __cplusplus ) && !defined( CINTERFACE ))
 
-static ULONG ServerCount( const int delta )
+static ULONG STDAPICALLTYPE ServerCount( const int delta )
 {
   static ULONG server_count = 0UL;
   if( delta < -1 || delta > 1 )

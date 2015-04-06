@@ -6,11 +6,6 @@
 
 #if defined( _WIN32 )
 
-#if !defined( _MSC_VER )
-#undef STDAPI
-#define STDAPI EXTERN_C __declspec(dllexport) HRESULT STDAPICALLTYPE
-#endif
-
 #include <stdio.h>
 #include <olectl.h>
 
@@ -86,12 +81,12 @@ static HRESULT ComboxDllUnregisterServer( const GUID *clsid )
   return S_OK;
 }
 
-static unsigned long ComboxDllCanUnloadNow( unsigned long (*server_count)( const int ) ) 
+static ULONG ComboxDllCanUnloadNow( ULONG (STDAPICALLTYPE *server_count)( const int ) ) 
 {
   return server_count( 0 ) == 0 ? S_OK: S_FALSE;
 }
 
-static BOOL ComboxDllMain( HANDLE module, DWORD reason, unsigned long (*server_count)( const int ) )
+static BOOL ComboxDllMain( HANDLE module, DWORD reason, ULONG (STDAPICALLTYPE *server_count)( const int ) )
 {
   if( reason == DLL_PROCESS_ATTACH ) 
   { 
