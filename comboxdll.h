@@ -4,6 +4,7 @@
 #include <objbase.h>
 #include <combox.h>
 
+/*
 typedef struct _combox_dll_t
 {
   const GUID *clsid;
@@ -27,6 +28,7 @@ static HRESULT STDMETHODCALLTYPE ComboxDllGetClassObject( REFCLSID rclsid, REFII
   }
   return CLASS_E_CLASSNOTAVAILABLE;
 }
+*/
 
 #if defined( _WIN32 )
 
