@@ -25,4 +25,8 @@ include( shared.txt )
 add_shared_library( alphasrv AlphaSrv.c AlphaSrv.def )
 target_link_libraries( alphasrv alpha )
 
+add_executable( test_alphasrv test_alphasrv.c )
+target_link_shared_libraries( test_alphasrv alphasrv )
+install( TARGETS test_alphasrv RUNTIME DESTINATION bin )
+
 include( CPack )

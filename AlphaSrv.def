@@ -1,7 +1,7 @@
 LIBRARY "AlphaSrv"
 EXPORTS
-DllGetClassObject PRIVATE
-DllCanUnloadNow PRIVATE
-DllRegisterServer PRIVATE
-DllUnregisterServer PRIVATE
-Alpha_new PRIVATE
+DllGetClassObject=_DllGetClassObject@12
+DllCanUnloadNow=_DllCanUnloadNow@0
+DllRegisterServer=_DllRegisterServer@0
+DllUnregisterServer=_DllUnregisterServer@0
+Alpha_new=_Alpha_new@0

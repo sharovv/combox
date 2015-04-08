@@ -4,6 +4,30 @@
 #include <objbase.h>
 #include <combox.h>
 
+typedef struct _combox_dll_t
+{
+  const GUID *clsid;
+  HRESULT (STDMETHODCALLTYPE *get_class_object)( REFCLSID rclsid, REFIID riid, LPVOID *ppi );
+} combox_dll_t;
+
+#define COMBOX_DLL_END { NULL, NULL }
+
+static combox_dll_t combox_dll[];
+
+static HRESULT STDMETHODCALLTYPE ComboxDllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi )
+{
+  int i;
+
+  for( i = 0; combox_dll[i].clsid != NULL && combox_dll[i].get_class_object != NULL; i++ )
+  {
+    if( IsEqualGUID( rclsid, combox_dll[i].clsid ) )
+    {
+      return combox_dll[i].get_class_object( rclsid, riid, ppi );
+    }
+  }
+  return CLASS_E_CLASSNOTAVAILABLE;
+}
+
 #if defined( _WIN32 )
 
 #include <stdio.h>
@@ -97,7 +121,7 @@ static BOOL ComboxDllMain( HANDLE module, DWORD reason, ULONG (STDAPICALLTYPE *s
 }
 
 #define COMBOX_DLL( clsid, get_class_object, server_count, description ) \
-STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return get_class_object( rclsid, riid, ppi ); } \
+STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxDllGetClassObject( rclsid, riid, ppi ); } \
 STDAPI DllRegisterServer() { return ComboxDllRegisterServer( clsid, description ); } \
 STDAPI DllUnregisterServer() { return ComboxDllUnregisterServer( clsid ); } \
 STDAPI DllCanUnloadNow() { return ComboxDllCanUnloadNow( server_count ); } \
