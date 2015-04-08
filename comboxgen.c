@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #if defined( _WIN32 )
 #include <windows.h>
@@ -23,11 +24,11 @@ void print_interface( const char *name_interface )
   printf( "#ifndef _%s_h\n", name_interface );
   printf( "#define _%s_h\n\n", name_interface );
   printf( "#include <objbase.h>\n\n" );
-  printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
+  printf( "/* {%08X-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
     id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
-  printf( "static const GUID IID_%s = { 0x%08lX, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
+  printf( "static const GUID IID_%s = { 0x%08X, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
     name_interface,
     id.Data1, id.Data2, id.Data3,
     id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
@@ -50,11 +51,11 @@ void print_header( const char *name_class, const char *name_interface )
   printf( "#ifndef _%s_h\n", name_class );
   printf( "#define _%s_h\n\n", name_class );
   printf( "#include <%s.h>\n\n", name_interface );
-  printf( "/* {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
+  printf( "/* {%08X-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} */\n",
     id.Data1, id.Data2, id.Data3,
     id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],
     id.Data4[4], id.Data4[5], id.Data4[6], id.Data4[7] );
-  printf( "static const GUID CLSID_%s = { 0x%08lX, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
+  printf( "static const GUID CLSID_%s = { 0x%08X, 0x%04X, 0x%04x, { 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X } };\n\n", 
     name_class,
     id.Data1, id.Data2, id.Data3,
     id.Data4[0], id.Data4[1], id.Data4[2], id.Data4[3],

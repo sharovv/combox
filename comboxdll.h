@@ -121,7 +121,7 @@ static BOOL ComboxDllMain( HANDLE module, DWORD reason, ULONG (STDAPICALLTYPE *s
 }
 
 #define COMBOX_DLL( clsid, get_class_object, server_count, description ) \
-STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return ComboxDllGetClassObject( rclsid, riid, ppi ); } \
+STDAPI DllGetClassObject( REFCLSID rclsid, REFIID riid, LPVOID *ppi ) { return get_class_object( rclsid, riid, ppi ); } \
 STDAPI DllRegisterServer() { return ComboxDllRegisterServer( clsid, description ); } \
 STDAPI DllUnregisterServer() { return ComboxDllUnregisterServer( clsid ); } \
 STDAPI DllCanUnloadNow() { return ComboxDllCanUnloadNow( server_count ); } \

@@ -74,10 +74,12 @@ template <typename TC> struct ComboxUnknown
   }
   STDMETHOD_( ULONG, Release )( TC *instance )
   {
+    ULONG r;
     ServerCount( -1 );
-    if( --RefCount == 0 )
+    r = --RefCount;
+    if( r == 0 )
       delete instance;
-    return RefCount;
+    return r;
   }
 };
 
@@ -100,6 +102,7 @@ public:
       return CLASS_E_NOAGGREGATION;
 
     pn = new TC;
+    ServerCount( 1 );
 
     if( pn == NULL )
       return E_OUTOFMEMORY;
