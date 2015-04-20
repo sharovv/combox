@@ -48,7 +48,7 @@ static char *combox_guid2str( const GUID *g, char *s )
   return s;
 }
 
-static HRESULT ComboxDllRegisterServer( const GUID *clsid, const char *desc ) 
+static HRESULT ComboxDllRegisterServer( const GUID *clsid, const char *desc )
 {
   char filename[ 260 ], tmp[ 260 ] = "CLSID\\";
   DWORD len;
@@ -80,7 +80,7 @@ static HRESULT ComboxDllRegisterServer( const GUID *clsid, const char *desc )
     return SELFREG_E_CLASS;
 
   strcpy( tmp, "Apartment" );
-  if( RegSetValueEx( hkey, "ThreadingModel", 0, REG_SZ, tmp, strlen( tmp ) ) != ERROR_SUCCESS )
+  if( RegSetValueEx( hkey, "ThreadingModel", 0, REG_SZ, (BYTE *)tmp, strlen( tmp ) ) != ERROR_SUCCESS )
   {
     RegCloseKey( hkey );
     return SELFREG_E_CLASS;
@@ -107,16 +107,16 @@ static HRESULT ComboxDllUnregisterServer( const GUID *clsid )
   return S_OK;
 }
 
-static ULONG ComboxDllCanUnloadNow( ULONG (STDAPICALLTYPE *server_count)( const int ) ) 
+static ULONG ComboxDllCanUnloadNow( ULONG (STDAPICALLTYPE *server_count)( const int ) )
 {
   return server_count( 0 ) == 0 ? S_OK: S_FALSE;
 }
 
 static BOOL ComboxDllMain( HANDLE module, DWORD reason, ULONG (STDAPICALLTYPE *server_count)( const int ) )
 {
-  if( reason == DLL_PROCESS_ATTACH ) 
-  { 
-    ComboxModule = (HINSTANCE)module; 
+  if( reason == DLL_PROCESS_ATTACH )
+  {
+    ComboxModule = (HINSTANCE)module;
     server_count( -2 );
   }
   return TRUE;
